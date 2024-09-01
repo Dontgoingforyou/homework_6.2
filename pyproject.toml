@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "homework-6-2"
+version = "0.1.0"
+description = ""
+authors = ["Mikhail Mikhailusov <mishael000@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "homework_6"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flake8 = "^7.1.1"
+django = "^5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
