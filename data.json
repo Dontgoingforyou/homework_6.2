@@ -1,0 +1,46 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "MyPy",
+      "description": "",
+      "image": "",
+      "category": 1,
+      "purchase_price": 600,
+      "created_at": "2024-09-10T21:59:55.163Z",
+      "updated_at": "2024-09-10T21:59:55.163Z",
+      "manufactured_at": null
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Translation",
+      "description": "",
+      "image": "",
+      "category": 1,
+      "purchase_price": 900,
+      "created_at": "2024-09-10T22:09:14.381Z",
+      "updated_at": "2024-09-10T22:09:14.381Z",
+      "manufactured_at": null
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Плагины",
+      "description": "Плагины на все случаи жизни"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Примеры кода",
+      "description": "Разные примеры кода"
+    }
+  }
+]

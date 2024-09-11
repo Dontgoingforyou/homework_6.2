@@ -25,18 +25,26 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
                     <table class="table table-striped">
-                        <tr>
-                            <td class="w-25">Страна</td>
-                            <td>USA</td>
-                        </tr>
-                        <tr>
-                            <td class="w-25">ИНН</td>
-                            <td>91-1144442</td>
-                        </tr>
-                        <tr>
-                            <td class="w-25">Адрес</td>
-                            <td>Redmond,WA,98052-6399</td>
-                        </tr>
+                        {% if contacts %}
+                            {% for contact in contacts %}
+                            <tr>
+                                <td class="w-25">Имя</td>
+                                <td>{{ contact.name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25">Телефон</td>
+                                <td>{{ contact.phone }}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25">Сообщение</td>
+                                <td>{{ contact.message }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="2">Нет контактных данных для отображения.</td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -59,7 +67,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="message">Сообщение</label>
-                            <textarea type="text" name="message" class="form-control" id="message" placeholder="Контактный телефон" required></textarea>
+                            <textarea name="message" class="form-control" id="message" placeholder="Ваше сообщение" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Отправить</button>
                     </form>

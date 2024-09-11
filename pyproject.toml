@@ -10,6 +10,10 @@ packages = [{include = "homework_6"}]
 python = "^3.12"
 flake8 = "^7.1.1"
 django = "^5.1"
+psycopg2-binary = "^2.9.9"
+pillow = "^10.4.0"
+black = "^24.8.0"
+ipython = "^8.27.0"
 
 
 [build-system]
