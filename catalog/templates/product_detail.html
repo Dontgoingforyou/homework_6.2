@@ -1,0 +1,20 @@
+{% extends 'home.html' %}
+{% load media_tags %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description }}</p>
+                        <p class="card-text">Цена: ${{ product.purchase_price }}</p>
+                        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Назад</a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock %}

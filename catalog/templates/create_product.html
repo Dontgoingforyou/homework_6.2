@@ -1,0 +1,43 @@
+{% extends "home.html" %}
+{% load media_tags %}
+{% block content %}
+
+  <div class="container mt-5">
+    <h2 style="font-weight: normal;" class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Добавление продукта</h2>
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.image.label_tag }}
+        {{ form.image|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.category.label_tag }}
+        {{ form.category|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.purchase_price.label_tag }}
+        {{ form.purchase_price|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.manufactured_at.label_tag }}
+        {{ form.manufactured_at|add_class:"form-control" }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Добавить продукт</button>
+    </form>
+  </div>
+{% endblock %}
