@@ -1,0 +1,31 @@
+{% extends 'catalog/home.html' %}
+{% load static %}
+{% load media_tags %}
+{% block content %}
+
+
+<h2 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Блоги</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    {% if object.preview_image %}
+                    <img src="{{ object.preview_image | media_filter }}" class="card-img-top" alt="{{ object.preview_image }}">
+                    {% else %}
+                    <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Изображение недоступно">
+                    {% endif %}
+                    <h5 class="card-title">{{ object.title }} | {{ object.slug }}</h5>
+                    <p class="card-text">{{ object.context }}</p>
+                    <p class="card-text">{{ object.is_published }}</p>
+                    <p class="card-text">{{ object.created_at }}</p>
+                    <p class="card-text">Количество просмотров: {{ object.views }}</p>
+                </div>
+                <div class="btn-group">
+                  <a class="btn btn-primary" href="{% url 'catalog:blog_list' %}" role="button">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

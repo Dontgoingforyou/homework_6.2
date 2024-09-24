@@ -77,3 +77,20 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.phone})"
+
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Заголовок", help_text="Введите заголовок")
+    slug = models.CharField(max_length=100, **NULLABLE)
+    context = models.TextField(verbose_name="Содержимое", help_text="Введите текст")
+    preview_image = models.ImageField(upload_to="catalog/blog_images", verbose_name="Изображение", **NULLABLE)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", help_text="Введите дату создания")
+    is_published = models.BooleanField(default=False, verbose_name="Публикация")
+    views = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
+
+    class Meta:
+        verbose_name = "Запись в блоге"
+        verbose_name_plural = "Записи в блоге"
+
+    def __str__(self):
+        return self.title

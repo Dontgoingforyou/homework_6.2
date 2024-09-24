@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+{% extends 'catalog/home.html' %}
 {% load static %}
 {% load media_tags %}
 {% block content %}
@@ -61,8 +61,8 @@
 <div class="container">
     <h2 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Каталог</h2>
     <div class="row">
-        {% if page_obj %}
-            {% for product in page_obj %}
+        {% if object_list %}
+            {% for product in object_list %}
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
                     {% if product.image %}
@@ -72,7 +72,7 @@
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                        <p class="card-text">{{ product.description|truncate_text:100 }}</p>
                         <p class="card-text">Цена: ${{ product.purchase_price }}</p>
                         <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
                     </div>
