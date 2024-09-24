@@ -32,4 +32,7 @@ def add_class(value, arg):
     """
     Фильтр позвляет динамически добавлять CSS-классы к виджетам полей формы в Django-шаблоне
     """
-    return value.as_widget(attrs={'class': arg})
+    try:
+        return value.as_widget(attrs={'class': arg})
+    except AttributeError:
+        return value

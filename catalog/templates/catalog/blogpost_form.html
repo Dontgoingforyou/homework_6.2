@@ -1,0 +1,45 @@
+{% extends 'catalog/home.html' %}
+{% load media_tags %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 style="font-weight: normal;" class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        {% if object %}
+        Изменение блога
+        {% else %}
+        Добавление блога
+        {% endif %}
+    </h2>
+    <form method="POST" enctype="multipart/form-data" class="needs-validation">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.slug.label_tag }}
+            {{ form.slug|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.context.label_tag }}
+            {{ form.context|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.preview_image.label_tag }}
+            {{ form.preview_image|add_class:"form-control" }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {% if object %}
+            Изменить
+            {% else %}
+            Добавить блог
+            {% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}

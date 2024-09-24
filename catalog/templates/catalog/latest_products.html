@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+{% extends 'catalog/home.html' %}
 {% block content %}
 {% load static %}
 {% load media_tags %}
@@ -65,8 +65,8 @@
 
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            {% if latest_products %}
-            {% for product in latest_products %}
+            {% if object_list %}
+            {% for product in object_list %}
                 {% if forloop.counter0|divisibleby:3 %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                     <div class="row">

@@ -1,0 +1,98 @@
+{% extends 'catalog/home.html' %}
+{% load static %}
+{% load media_tags %}
+{% block content %}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .card {
+        min-height: 480px;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 200px;
+    }
+
+    .card-text {
+        max-height: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-body .btn {
+        align-self: flex-start;
+        margin-top: auto;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+    .pagination a, .pagination span {
+        margin: 0 5px;
+        padding: 8px 16px;
+        text-decoration: none;
+        background-color: #f4f4f4;
+        color: #007bff;
+        border-radius: 4px;
+    }
+
+    .pagination a:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination .active {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+
+<div class="text-center mt-4">
+    <a href="{% url 'catalog:create_blog' %}" class="btn btn-secondary">Создать блог</a>
+</div>
+
+<h2 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Блоги</h2>
+<div class="container">
+    <div class="row">
+        {% if object_list %}
+        {% for post in object_list %}
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    {% if post.preview_image %}
+                    <img src="{{ post.preview_image | media_filter }}" class="card-img-top"
+                         alt="{{ post.preview_image }}">
+                    {% else %}
+                    <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Изображение недоступно">
+                    {% endif %}
+                    <h5 class="card-title">{{ post.title }} | {{ post.slug }}</h5>
+                    <p class="card-text">{{ post.context|truncate_text:15 }}</p>
+                    <p class="card-text">{{ post.created_at }}</p>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'catalog:detail_blog' post.slug %}"
+                       role="button">Посмотреть</a>
+                    <a class="btn btn-primary" href="{% url 'catalog:update_blog' post.slug %}" role="button">Редактировать</a>
+                    <a class="btn btn-primary" href="{% url 'catalog:delete_blog' post.slug %}"
+                       role="button">Удалить</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Нет блогов для отображения.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

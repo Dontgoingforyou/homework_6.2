@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+{% extends 'catalog/home.html' %}
 {% block content %}
 {% load static %}
 <div class="container">
@@ -7,8 +7,8 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
                     <table class="table table-striped">
-                        {% if contacts %}
-                            {% for contact in contacts %}
+                        {% if object_list %}
+                            {% for contact in object_list %}
                             <tr>
                                 <td class="w-25">Имя</td>
                                 <td>{{ contact.name }}</td>

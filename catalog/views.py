@@ -1,52 +1,88 @@
-from catalog.models import Product, Contact
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
-from .forms import ProductForm
+from django.core.mail import send_mail
+from django.utils.text import slugify
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from catalog.models import Product, Contact, BlogPost
+
+from config import settings
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f"{name} ({phone}): {message}")
-    return render(request, 'contacts.html')
+class ContactListView(TemplateView):
+    template_name = "catalog/contact_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object_list"] = Contact.objects.all()
+        return context
 
 
-def contacts_view(request):
-    contacts_info = Contact.objects.all()
-
-    for contact in contacts_info:
-        print(contact.name, contact.phone)
-    return render(request, "contacts.html", {'contacts': contacts_info})
-
-
-def home_view(request):
-    latest_products = Product.objects.order_by('-created_at')[:6]
-
-    for product in latest_products:
-        print(product.name, product.created_at, product.image.url if product.image else "No image")
-    return render(request, "latest_products.html", {'latest_products': latest_products})
+class HomeView(ListView):
+    model = Product
+    template_name = "catalog/latest_products.html"
+    context_object_name = "object_list"
+    queryset = Product.objects.order_by('-created_at')[:6]
 
 
-def product_list(request):
-    products = Product.objects.all()
-    paginator = Paginator(products, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, "product_list.html", {"page_obj": page_obj})
+class ProductListView(ListView):
+    model = Product
+    paginate_by = 12
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, "product_detail.html", {"product": product})
+class ProductDetailView(DetailView):
+    model = Product
 
 
-def create_product(request):
-    request.method = 'POST'
-    form = ProductForm(request.POST, request.FILES)
-    if form.is_valid():
-        form.save()
-        return redirect('catalog:product_list')
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ("name", "description", "image", "category", "purchase_price",)
+    success_url = reverse_lazy("catalog:product_list")
 
-    return render(request, 'create_product.html', {'form': form})
+
+class BlogPostListView(ListView):
+    model = BlogPost
+    queryset = BlogPost.objects.filter(is_published=True).order_by('-created_at')
+
+
+class BlogPostDetailView(DetailView):
+    model = BlogPost
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views += 1
+        if self.object.views == 100:
+            send_mail(
+                'Поздравляем! Ваша статья достигла 100 просмотров!',
+                f'Ваша статья "{self.object.title}" достигла 100 просмотров! Поздравляем!',
+                settings.EMAIL_HOST_USER,
+                ['mishael000@yandex.ru'],
+                fail_silently=False,
+            )
+        self.object.save()
+        return self.object
+
+
+class BlogPostCreateView(CreateView):
+    model = BlogPost
+    fields = ("title", "slug", "context", "preview_image", "is_published")
+    success_url = reverse_lazy("catalog:blog_list")
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save()
+            obj.slug = slugify(obj.title)
+            obj.save()
+        return super().form_valid(form)
+
+
+class BlogPostUpdateView(UpdateView):
+    model = BlogPost
+    fields = ("title", "slug", "context", "preview_image", "is_published")
+    success_url = reverse_lazy("catalog:blog_list")
+
+    def get_success_url(self):
+        return reverse('catalog:detail_blog', args=[self.kwargs.get('slug')])
+
+
+class BlogPostDeleteView(DeleteView):
+    model = BlogPost
+    success_url = reverse_lazy("catalog:blog_list")
