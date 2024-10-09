@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["Mikhail Mikhailusov <mishael000@yandex.ru>"]
 readme = "README.md"
-packages = [{include = "homework_6"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -14,6 +13,7 @@ psycopg2-binary = "^2.9.9"
 pillow = "^10.4.0"
 black = "^24.8.0"
 ipython = "^8.27.0"
+django-widget-tweaks = "^1.5.0"
 
 
 [build-system]

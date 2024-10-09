@@ -33,6 +33,11 @@
             {{ form.preview_image|add_class:"form-control" }}
         </div>
 
+        <div class="mb-3">
+            {{ form.is_published.label_tag }}
+            {{ form.is_published|add_class:"form-check-input" }}
+        </div>
+
         <button type="submit" class="btn btn-primary">
             {% if object %}
             Изменить

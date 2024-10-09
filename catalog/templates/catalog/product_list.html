@@ -18,7 +18,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 200px;
+        height: 310px;
     }
 
     .card-text {
@@ -62,23 +62,33 @@
     <h2 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Каталог</h2>
     <div class="row">
         {% if object_list %}
-            {% for product in object_list %}
-            <div class="col-md-4">
-                <div class="card mb-4 box-shadow">
-                    {% if product.image %}
-                    <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
-                    {% else %}
-                    <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Изображение недоступно">
+        {% for product in object_list %}
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                {% if product.image %}
+                <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Изображение недоступно">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncate_text:100 }}</p>
+                    <p class="card-text">Цена: ${{ product.purchase_price }}</p>
+                    {% if product.current_version %}
+                    <p>Версия: {{ product.current_version.version_number }}</p>
+                    <p>Название: {{ product.current_version.version_name }}</p>
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description|truncate_text:100 }}</p>
-                        <p class="card-text">Цена: ${{ product.purchase_price }}</p>
-                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="{% url 'catalog:product_detail' product.pk %}"
+                           role="button">Подробнее</a>
+                        <a class="btn btn-primary" href="{% url 'catalog:product_update' product.pk %}" role="button">Редактировать</a>
+                        <a class="btn btn-primary" href="{% url 'catalog:product_delete' product.pk %}"
+                           role="button">Удалить</a>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </div>
+        {% endfor %}
         {% else %}
         <p>Нет товаров для отображения.</p>
         {% endif %}
@@ -91,11 +101,11 @@
         {% endif %}
 
         {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-            <span class="active">{{ num }}</span>
-            {% else %}
-            <a href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
+        {% if page_obj.number == num %}
+        <span class="active">{{ num }}</span>
+        {% else %}
+        <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}

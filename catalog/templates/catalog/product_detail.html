@@ -2,6 +2,16 @@
 {% load media_tags %}
 {% block content %}
 {% load static %}
+
+<style>
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 400px;
+    }
+</style>
+
 <div class="container">
     <div class="row">
             <div class="col-md-4">
@@ -17,6 +27,10 @@
                         <p class="card-text">Цена: ${{ product.purchase_price }}</p>
                         <p class="card-text">Категория: {{ product.category }}</p>
                         <p class="card-text">Дата создания: {{ product.manufactured_at }}</p>
+                         {% if product.current_version %}
+                    <p>Версия: {{ product.current_version.version_number }}</p>
+                    <p>Название: {{ product.current_version.version_name }}</p>
+                    {% endif %}
                         <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Назад</a>
                     </div>
                 </div>

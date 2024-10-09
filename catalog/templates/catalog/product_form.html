@@ -1,43 +1,207 @@
 {% extends 'catalog/home.html' %}
+{% load widget_tweaks %}
 {% load media_tags %}
 {% block content %}
 
-  <div class="container mt-5">
-    <h2 style="font-weight: normal;" class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Добавление продукта</h2>
+<div class="container mt-5">
+    <h2 style="font-weight: normal;" class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        {% if object %}
+        Изменение продукта
+        {% else %}
+        Добавление продукта
+        {% endif %}
+    </h2>
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
     <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-      {% csrf_token %}
+        {% csrf_token %}
+        <div class="row">
+            <!-- Левая колонка: Основная форма продукта -->
+            <div class="col-md-6" id="product-form">
+                <div class="mb-3">
+                    {{ form.name.label_tag }}
+                    {% render_field form.name class="form-control" %}
+                    {% for error in form.name.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="mb-3">
-        {{ form.name.label_tag }}
-        {{ form.name|add_class:"form-control" }}
-      </div>
+                <div class="mb-3">
+                    {{ form.description.label_tag }}
+                    {% render_field form.description class="form-control" %}
+                    {% for error in form.description.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="mb-3">
-        {{ form.description.label_tag }}
-        {{ form.description|add_class:"form-control" }}
-      </div>
+                <div class="mb-3">
+                    {{ form.image.label_tag }}
+                    {% render_field form.image class="form-control" %}
+                    {% for error in form.image.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="mb-3">
-        {{ form.image.label_tag }}
-        {{ form.image|add_class:"form-control" }}
-      </div>
+                <div class="mb-3">
+                    {{ form.category.label_tag }}
+                    {% render_field form.category class="form-control" %}
+                    {% for error in form.category.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="mb-3">
-        {{ form.category.label_tag }}
-        {{ form.category|add_class:"form-control" }}
-      </div>
+                <div class="mb-3">
+                    {{ form.purchase_price.label_tag }}
+                    {% render_field form.purchase_price class="form-control" %}
+                    {% for error in form.purchase_price.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
 
-      <div class="mb-3">
-        {{ form.purchase_price.label_tag }}
-        {{ form.purchase_price|add_class:"form-control" }}
-      </div>
+                <div class="mb-3">
+                    {{ form.manufactured_at.label_tag }}
+                    {% render_field form.manufactured_at class="form-control" %}
+                    {% for error in form.manufactured_at.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-      <div class="mb-3">
-        {{ form.manufactured_at.label_tag }}
-        {{ form.manufactured_at|add_class:"form-control" }}
-      </div>
+            <!-- Правая колонка: Formset для версий продукта -->
+            <div class="col-md-6" id="version-formset">
+                <h4>Версии продукта</h4>
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {% if form.instance.pk %}
+                        <h5 class="card-title">Версия {{ forloop.counter }}</h5>
+                        {% else %}
+                        <h5 class="card-title">Новая версия</h5>
+                        {% endif %}
 
-      <button type="submit" class="btn btn-primary">Добавить продукт</button>
+                        <div class="mb-3">
+                            {{ form.version_number.label_tag }}
+                            {% render_field form.version_number class="form-control" %}
+                            {% for error in form.version_number.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.version_name.label_tag }}
+                            {% render_field form.version_name class="form-control" %}
+                            {% for error in form.version_name.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-check mb-3">
+                            {% render_field form.is_current class="form-check-input" %}
+                            {{ form.is_current.label_tag }}
+                            {% for error in form.is_current.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if form.instance.pk %}
+                        <div class="form-check">
+                            {% render_field form.DELETE class="form-check-input" %}
+                            {{ form.DELETE.label_tag }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <button type="button" class="btn btn-secondary" id="add-version">Добавить версию</button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">
+            {% if object %}
+            Изменить
+            {% else %}
+            Добавить продукт
+            {% endif %}
+        </button>
     </form>
-  </div>
+</div>
+
+<!-- JavaScript для динамического добавления форм в formset -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var formset = $('#id_versions-TOTAL_FORMS');
+        var totalForms = parseInt(formset.val());
+
+        $('#add-version').click(function(){
+            var emptyForm = $('#empty-form').html().replace(/__prefix__/g, totalForms);
+            $('#version-formset').append(emptyForm);
+            formset.val(totalForms + 1);
+            totalForms += 1;
+        });
+    });
+</script>
+
+<!-- Шаблон пустой формы для динамического добавления -->
+<div id="empty-form" style="display: none;">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Новая версия</h5>
+            <div class="mb-3">
+                <label for="id_versions-__prefix__-version_number">Номер версии:</label>
+                <input type="text" name="versions-__prefix__-version_number" class="form-control"
+                       id="id_versions-__prefix__-version_number">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_versions-__prefix__-version_name">Имя версии:</label>
+                <input type="text" name="versions-__prefix__-version_name" class="form-control"
+                       id="id_versions-__prefix__-version_name">
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" name="versions-__prefix__-is_current" class="form-check-input"
+                       id="id_versions-__prefix__-is_current">
+                <label class="form-check-label" for="id_versions-__prefix__-is_current">Актуальная версия</label>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="versions-__prefix__-DELETE" class="form-check-input"
+                       id="id_versions-__prefix__-DELETE">
+                <label class="form-check-label" for="id_versions-__prefix__-DELETE">Удалить</label>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -66,6 +66,26 @@ class Category(models.Model):
         return self.name
 
 
+class Version(models.Model):
+    product = models.ForeignKey(Product, related_name='versions', on_delete=models.SET_NULL, **NULLABLE, verbose_name='Имя продукта')
+    version_number = models.CharField(max_length=50, verbose_name='Номер версии')
+    version_name = models.CharField(max_length=150, verbose_name='Имя версии')
+    is_current = models.BooleanField(default=False, verbose_name='Актуальная версия')
+
+    class Meta:
+        verbose_name = "Версия"
+        verbose_name_plural = "Версии"
+
+    def save(self, *args, **kwargs):
+        """ Метод устанавливает все остальные версии продуктов как НЕ текущие"""
+        if self.is_current:
+            Version.objects.filter(product=self.product, is_current=True).update(is_current=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.version_number
+
+
 class Contact(models.Model):
     name = models.CharField(max_length=100, verbose_name="Имя", help_text="Введите имя")
     phone = models.CharField(max_length=100)
