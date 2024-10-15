@@ -1,0 +1,16 @@
+{% extends "catalog/home.html" %}
+
+{% block content %}
+  <h2>Мой Профиль</h2>
+  <p><strong>Электронная почта:</strong> {{ user_profile.email }}</p>
+  <p><strong>Имя:</strong> {{ user_profile.first_name }}</p>
+  <p><strong>Фамилия:</strong> {{ user_profile.last_name }}</p>
+  <p><strong>Телефон:</strong> {{ user_profile.phone }}</p>
+  <p><strong>Страна:</strong> {{ user_profile.country }}</p>
+  {% if user_profile.avatar %}
+    <p><strong>Аватар:</strong><br>
+      <img src="{{ user_profile.avatar.url }}" alt="Аватар" width="150">
+    </p>
+  {% endif %}
+  <a href="{% url 'users:profile_update' %}" class="btn btn-primary">Редактировать Профиль</a>
+{% endblock %}

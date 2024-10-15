@@ -14,27 +14,30 @@
 
 <div class="container">
     <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4 box-shadow">
-                    {% if product.image %}
-                        <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
-                    {% else %}
-                        <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Stock image">
+        <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+                {% if product.image %}
+                <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <img src="{% static 'default_image.jpg' %}" class="card-img-top" alt="Stock image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">Цена: ${{ product.purchase_price }}</p>
+                    <p class="card-text">Категория: {{ product.category }}</p>
+                    <p class="card-text">Дата создания: {{ product.manufactured_at }}</p>
+                    {% if product.owner %}
+                    <p class="card-text">{{ product.owner }}</p>
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description }}</p>
-                        <p class="card-text">Цена: ${{ product.purchase_price }}</p>
-                        <p class="card-text">Категория: {{ product.category }}</p>
-                        <p class="card-text">Дата создания: {{ product.manufactured_at }}</p>
-                         {% if product.current_version %}
+                    {% if product.current_version %}
                     <p>Версия: {{ product.current_version.version_number }}</p>
                     <p>Название: {{ product.current_version.version_name }}</p>
                     {% endif %}
-                        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Назад</a>
-                    </div>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Назад</a>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 {% endblock %}

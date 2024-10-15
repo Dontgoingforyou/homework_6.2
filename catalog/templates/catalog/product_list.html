@@ -74,6 +74,9 @@
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text">{{ product.description|truncate_text:100 }}</p>
                     <p class="card-text">Цена: ${{ product.purchase_price }}</p>
+                    {% if product.owner %}
+                    <p class="card-text">{{ product.owner }}</p>
+                    {% endif %}
                     {% if product.current_version %}
                     <p>Версия: {{ product.current_version.version_number }}</p>
                     <p>Название: {{ product.current_version.version_name }}</p>
@@ -81,9 +84,11 @@
                     <div class="btn-group">
                         <a class="btn btn-primary" href="{% url 'catalog:product_detail' product.pk %}"
                            role="button">Подробнее</a>
+                        {% if user.is_authenticated %}
                         <a class="btn btn-primary" href="{% url 'catalog:product_update' product.pk %}" role="button">Редактировать</a>
                         <a class="btn btn-primary" href="{% url 'catalog:product_delete' product.pk %}"
                            role="button">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

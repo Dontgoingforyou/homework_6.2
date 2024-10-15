@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {"blank": True, "null": True}
 
 
@@ -40,6 +42,7 @@ class Product(models.Model):
         help_text="Введите дату производства",
         **NULLABLE
     )
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE)
 
     class Meta:
         verbose_name = "Продукт"
