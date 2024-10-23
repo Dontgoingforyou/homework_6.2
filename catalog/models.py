@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 from users.models import User
 
@@ -43,11 +44,16 @@ class Product(models.Model):
         **NULLABLE
     )
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE)
+    is_published = models.BooleanField(default=False, verbose_name="Публикация")
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["category", "name"]
+        permissions = [
+            ('can_unpublish_product', 'Can unpublish product'),
+            ('can_edit_any_product', 'Can edit any product'),
+        ]
 
     def __str__(self):
         return self.name
@@ -117,3 +123,8 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)

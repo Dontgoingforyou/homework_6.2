@@ -81,11 +81,16 @@
                     <p class="card-text">{{ post.created_at }}</p>
                 </div>
                 <div class="btn-group">
-                    <a class="btn btn-primary" href="{% url 'catalog:detail_blog' post.slug %}"
-                       role="button">Посмотреть</a>
+                    {% if post.slug %}
+                        <a class="btn btn-primary" href="{% url 'catalog:detail_blog' post.slug %}" role="button">Посмотреть</a>
+                    {% else %}
+                        <a class="btn btn-secondary disabled" role="button">Недоступно</a>
+                    {% endif %}
+                    {% if perms.catalog.change_blogpost and perms.catalog.delete_blogpost %}
                     <a class="btn btn-primary" href="{% url 'catalog:update_blog' post.slug %}" role="button">Редактировать</a>
                     <a class="btn btn-primary" href="{% url 'catalog:delete_blog' post.slug %}"
                        role="button">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

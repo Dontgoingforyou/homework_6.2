@@ -22,6 +22,13 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError("Описание продукта содержит запрещенные слова.")
         return description
 
+
+class ProductModeratorForm(ProductForm):
+    class Meta:
+        model = Product
+        fields = ['description', 'category']
+
+
 class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
