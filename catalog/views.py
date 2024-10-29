@@ -2,12 +2,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.forms import inlineformset_factory
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.decorators.cache import never_cache
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
-from catalog.models import Product, Contact, BlogPost, Version
+from catalog.models import Product, Contact, BlogPost, Version, Category
+from catalog.services import get_product_from_cache, get_category_from_cache
 
 from config import settings
 
@@ -32,22 +36,38 @@ class ProductListView(ListView):
     model = Product
     paginate_by = 12
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_id = self.request.GET.get('category')
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['categories'] = get_category_from_cache()
         for product in context['object_list']:
             current_version = Version.objects.filter(product=product, is_current=True).first()
             product.current_version = current_version
+
         return context
 
 
 class ProductDetailView(DetailView):
     model = Product
 
+    def get_queryset(self):
+        return get_product_from_cache()
+
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
+
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -137,6 +157,10 @@ class BlogPostCreateView(CreateView):
     model = BlogPost
     fields = ("title", "slug", "context", "preview_image", "is_published")
     success_url = reverse_lazy("catalog:blog_list")
+
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         if form.is_valid():

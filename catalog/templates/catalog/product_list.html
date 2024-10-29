@@ -60,6 +60,19 @@
 
 <div class="container">
     <h2 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Каталог</h2>
+
+   <div class="mb-3">
+    <label for="categorySelect" class="form-label">Выберите категорию:</label>
+    <form method="get" action="{% url 'catalog:product_list' %}">
+        <select id="categorySelect" class="form-select" name="category" onchange="this.form.submit()">
+            <option value="">Все категории</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"d" %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
     <div class="row">
         {% if object_list %}
         {% for product in object_list %}

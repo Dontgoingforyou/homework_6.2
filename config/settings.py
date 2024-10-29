@@ -4,7 +4,7 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-_v5b77svf&77o+2$h+qofwh4&87301r*#zh7=lc+n$tfg7i1e)'
+SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
@@ -30,6 +30,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -57,9 +59,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'online_store_homework',
         'USER': 'postgres',
-        'PASSWORD': 'evibul29',
+        'PASSWORD': config('PASSWORD'),
         'HOST': 'localhost',
-        "PORT": '5432',
+        'PORT': '5432',
     }
 }
 
@@ -109,3 +111,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
+
+CACHE_ENABLED = True
+if CACHE_ENABLED:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': config('LOCATION')
+        }
+    }
