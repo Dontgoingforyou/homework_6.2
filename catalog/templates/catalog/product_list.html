@@ -67,7 +67,7 @@
         <select id="categorySelect" class="form-select" name="category" onchange="this.form.submit()">
             <option value="">Все категории</option>
             {% for category in categories %}
-            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"d" %}selected{% endif %}>{{ category.name }}</option>
+            <option value="{{ category.id }}" {% if request.GET.category == category.id %}selected{% endif %}>{{ category.name }}</option>
             {% endfor %}
         </select>
     </form>
